@@ -1,6 +1,13 @@
 #peertube-plugin-livechat-container {
   display: flex;
   flex-direction: column;
+
+  iframe,
+  converse-root {
+    border: 1px solid black;
+    min-height: 30vh;
+    height: 100%;
+  }
 }
 
 #plugin-placeholder-player-next #peertube-plugin-livechat-container {
@@ -65,12 +72,6 @@
     margin-left: 0 !important;
     border-left: 1px solid currentColor;
   }
-}
-
-#peertube-plugin-livechat-container iframe {
-  border: 1px solid black;
-  min-height: 30vh;
-  height: 100%;
 }
 
 .peertube-plugin-livechat-warning {

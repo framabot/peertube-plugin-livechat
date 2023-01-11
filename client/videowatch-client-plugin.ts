@@ -6,6 +6,7 @@ import { closeSVG, openBlankChatSVG, openChatSVG, shareChatUrlSVG } from './vide
 import { displayButton, displayButtonOptions } from './videowatch/button'
 import { shareChatUrl } from './videowatch/share'
 import { getIframeUri } from './videowatch/uri'
+import { initConverse } from './converse/init'
 
 interface VideoWatchLoadedHookOptions {
   videojs: any
@@ -188,14 +189,39 @@ function register (registerOptions: RegisterClientOptions): void {
     }
 
     // Creating the iframe...
-    const iframe = document.createElement('iframe')
-    iframe.setAttribute('src', iframeUri)
-    iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms')
-    iframe.setAttribute('frameborder', '0')
+    // const iframe = document.createElement('iframe')
+    // iframe.setAttribute('src', iframeUri)
+    // iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms')
+    // iframe.setAttribute('frameborder', '0')
+    // if (additionalStyles) {
+    //   iframe.setAttribute('style', additionalStyles)
+    // }
+    // container.append(iframe)
+    // container.setAttribute('peertube-plugin-livechat-state', 'open')
+
+    // const chatDiv = document.createElement('converse-root')
+    const chatDiv = document.createElement('div')
     if (additionalStyles) {
-      iframe.setAttribute('style', additionalStyles)
+      chatDiv.setAttribute('style', additionalStyles)
     }
-    container.append(iframe)
+    // const shadowRoot = chatDiv.attachShadow({ mode: 'open' })
+    container.append(chatDiv)
+    initConverse({
+      view_mode: 'overlayed',
+      // shadowRoot,
+      jid: 'anon.localhost',
+      advancedControls: false, // TODO: remove this parameter
+      assetsPath: 'http://localhost:9000/plugins/livechat/6.1.0/static/conversejs/', // FIXME
+      authenticationUrl: '',
+      autoViewerMode: false,
+      boshServiceUrl: 'ws://localhost:9000/plugins/livechat/6.1.0/router/http-bind',
+      websocketServiceUrl: 'ws://localhost:9000/plugins/livechat/6.1.0/ws/xmpp-websocket',
+      forceReadonly: false,
+      noScroll: false,
+      room: '40d4101d-51e8-4b6c-9a5d-1cfd129def2b@room.localhost',
+      theme: 'peertube',
+      transparent: false
+    }).then(() => {}, () => {}) // FIXME: really?
     container.setAttribute('peertube-plugin-livechat-state', 'open')
 
     // Hacking styles...
