@@ -199,16 +199,21 @@ function register (registerOptions: RegisterClientOptions): void {
     // container.append(iframe)
     // container.setAttribute('peertube-plugin-livechat-state', 'open')
 
-    // const chatDiv = document.createElement('converse-root')
-    const chatDiv = document.createElement('div')
+    const shadowRootDiv = document.createElement('div')
+    shadowRootDiv.classList.add('peertube-plugin-livechat-shadow')
+    container.append(shadowRootDiv)
+    const shadowRoot = shadowRootDiv.attachShadow({ mode: 'open' })
+
+    const chatDiv = document.createElement('converse-root')
+    // const chatDiv = document.createElement('div')
     if (additionalStyles) {
       chatDiv.setAttribute('style', additionalStyles)
     }
-    // const shadowRoot = chatDiv.attachShadow({ mode: 'open' })
-    container.append(chatDiv)
+    // container.append(chatDiv)
+    shadowRoot.appendChild(chatDiv)
     initConverse({
-      view_mode: 'overlayed',
-      // shadowRoot,
+      viewMode: 'embedded',
+      shadowRoot,
       jid: 'anon.localhost',
       advancedControls: false, // TODO: remove this parameter
       assetsPath: 'http://localhost:9000/plugins/livechat/6.1.0/static/conversejs/', // FIXME

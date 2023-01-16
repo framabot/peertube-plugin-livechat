@@ -3,7 +3,8 @@
   flex-direction: column;
 
   iframe,
-  converse-root {
+  converse-root,
+  .peertube-plugin-livechat-shadow {
     border: 1px solid black;
     min-height: 30vh;
     height: 100%;

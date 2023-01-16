@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-async function loadConverse (url: string): Promise<void> {
+async function loadConverse (url: string, cssUrl: string, shadowRoot?: ShadowRoot): Promise<void> {
   return new Promise((resolve, reject) => {
     if (window.converse) {
       resolve()
@@ -21,6 +21,16 @@ async function loadConverse (url: string): Promise<void> {
     script.async = true
     script.src = url
     document.head.appendChild(script)
+
+    const css = document.createElement('link')
+    css.setAttribute('type', 'text/css')
+    css.setAttribute('rel', 'stylesheet')
+    css.setAttribute('href', cssUrl)
+    if (shadowRoot) {
+      shadowRoot.appendChild(css)
+    } else {
+      document.head.appendChild(css)
+    }
   })
 }
 
@@ -96,7 +106,7 @@ function randomNick (base: string): string {
 }
 
 interface InitConverseParams {
-  view_mode: 'embedded' | 'fullscreen' | 'overlayed'
+  viewMode: 'embedded' | 'fullscreen' | 'overlayed'
   shadowRoot?: ShadowRoot
   jid: string
   assetsPath: string
@@ -112,7 +122,7 @@ interface InitConverseParams {
   transparent: boolean
 }
 async function initConverse ({
-  view_mode,
+  viewMode,
   shadowRoot,
   jid,
   assetsPath,
@@ -128,7 +138,7 @@ async function initConverse ({
 }: InitConverseParams): Promise<void> {
   const isInIframe = inIframe()
 
-  await loadConverse(assetsPath + 'converse.min.js')
+  await loadConverse(assetsPath + 'converse.min.js', assetsPath + 'converse.min.css', shadowRoot)
   if (!window.converse) {
     throw new Error('Failed to load ConverseJS?')
   }
@@ -187,7 +197,7 @@ async function initConverse ({
     allow_contact_requests: false,
     allow_logout: false,
     show_controlbox_by_default: false,
-    view_mode,
+    view_mode: viewMode,
     root: shadowRoot,
     allow_message_corrections: 'all',
     allow_message_retraction: 'all',
